@@ -1,0 +1,62 @@
+Membuat Repository Bootcamp dalam Git Kraken
+Membuat berbagai folder yang diperlukan dalam folder Bootcamp
+
+/mnt/c/GitHub-Files/Bootcamp/DS-Bootcamp/Session-0/HotelDelJojo
+
+1. Membuat readme.md dalam VS Code dan di dalamnya dituliskan:
+
+# Hotel del Jojo
+Selamat datang di _Hotel del Jojo_
+
+Berikut adalah harga dari kamar-kamar yang kami punya:
+| | Tipe Kamar |    Harga   |
+|----|    ---     |     ---    |
+|1| Pantai     | ₩3,000,000 |
+|2| Rooftop    | ₩4,500,000 |
+|3| Taman      | ₩5,000,000 | 
+|4| Bar        | ₩1,250,000 |
+
+**Selamat menginap**
+
+Lalu push ke Git Kraken
+
+/mnt/c/GitHub-Files/Bootcamp/DS-Bootcamp/Session-0/HotelDelJojo
+
+2. Membuat folder asisten dan manager melalui terminal
+$ mkdir asisten
+$ touch asisten/asisten.txt
+$ mkdir manager
+$ touch manager/data-manager.txt
+Lalu push ke Git Kraken
+
+/mnt/c/GitHub-Files/Bootcamp/DS-Bootcamp/Session-0
+
+3. 
+a. Membuat folder bos di luar folder HotelDelJojo, lalu memasukannya ke dalam folder HotelDelJojo
+$ mkdir bos
+$ touch bos/bos.txt
+$ mv bos HotelDelJojo
+Mengisi bos.txt melalui VS Code "Jojo Man Wol"
+
+b. Mengubah nama data-manager.txt
+/mnt/c/GitHub-Files/Bootcamp/DS-Bootcamp/Session-0/HotelDelJojo/manager
+$ mv data-manager.txt manager.txt
+Lalu push ke Git Kraken
+
+c. Menghapus Folder Manager
+/mnt/c/GitHub-Files/Bootcamp/DS-Bootcamp/Session-0/HotelDelJojo
+$ rm -rf manager
+Lalu push ke Git Kraken
+
+d. Mengembalikan Folder Manager
+Pada Git Kraken klik kanan pada commit file (Remove Manager Directory)
+Lalu Klik revert commit
+
+Keterangan
+cd    (untuk change directory)
+mkdir (membuat directory baru)
+touch (membuat sebuah file dalam suatu directory)
+mv    (memindahkan suatu directory/file ke directory lain dan 
+       juga berguna untuk mengganti nama suatu directory/file)
+rm -rf(menghapus sebuah file)
+
