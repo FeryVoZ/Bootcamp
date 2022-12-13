@@ -88,9 +88,11 @@ void queue(){
     popQueue();
     popQueue();
     printQueue();
+    popQueue();
+    popQueue();
 }
 
-void priorityQueue(){
+void priorityQueue(){ //umur lebih tua lebih diprioritaskan
     pushPriority("Budi", 16);
     pushPriority("Angga", 20);
     pushPriority("Doni", 5);
@@ -107,9 +109,13 @@ void priorityQueue(){
 }
 
 int main(){
-
+    puts("Queue");
+    puts("");
     queue();
     puts("");
+    puts("========================");
+    puts("");
+    puts("Priority Queue");
     puts("");
     priorityQueue();
 
