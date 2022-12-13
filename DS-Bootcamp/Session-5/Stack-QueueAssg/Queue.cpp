@@ -92,12 +92,13 @@ void queue(){
     popQueue();
 }
 
-void priorityQueue(){ //umur lebih tua lebih diprioritaskan
-    pushPriority("Budi", 16);
-    pushPriority("Angga", 20);
-    pushPriority("Doni", 5);
+void priorityQueue(){ //jika umur patient > 50 tahun, maka patient lebih diprioritaskan dari yang paling tua
+    pushLast("Budi", 16);
+    pushLast("Angga", 20);
     pushPriority("Kevin", 80);
-    pushPriority("Tono", 50);
+    pushLast("Jim", 33);
+    pushPriority("Tono", 60);
+    pushLast("Doni", 5);
     pushPriority("Roni", 70);
     printQueue();
     puts("");
