@@ -209,6 +209,10 @@ int searchCust(char name[]){
     }
 }
 
+struct foodOrder{
+
+}
+
 void cls(){
     system("clear");
 }
@@ -447,6 +451,8 @@ void order(){
             }
             if(qty>foundQty){
                 puts("Sorry, our quantity of this food is not enough for your order");
+                printf("Press enter to continue...");
+                getchar();
             }
         }while(cek==false||qty>foundQty);
     }
@@ -495,6 +501,7 @@ void mainMenu(){
                 viewWarteg();
                 break;
             case 6:
+                order();
                 break;
             case 7:
                 break;
@@ -509,12 +516,3 @@ int main(){
     mainMenu();
     return 0;
 }
-// 12 14 2022
-// 09 06 01
-// if(yn-=2000<year) year+=1900;
-// else year+2000
-// yn-year= age;
-// if (mn-month<0) age-=1;
-// else if(mn-month==0){
-//      if(dn-date<0) age-=1
-//} 14 22
