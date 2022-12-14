@@ -8,20 +8,20 @@ const int maxBuckets = 999;
 
 void logoWarteg(){
     FILE *fpLW = fopen("WartegLogo.txt", "r");
-    char s[1000];
+    char logo;
     while(!feof(fpLW)){
-        fscanf(fpLW, "%[^\n]\n", s);
-        printf("%s\n", s);
+        logo=getc(fpLW);
+		printf("%c", logo);
     }
     fclose(fpLW);
 }
 
 void logoExit(){
     FILE *fpLE = fopen("ExitLogo.txt", "r");
-    char s[1000];
+    char logo;
     while(!feof(fpLE)){
-        fscanf(fpLE, "%[^\n]\n", s);
-        printf("%s\n", s);
+        logo=getc(fpLE);
+		printf("%c", logo);
     }
     fclose(fpLE);
 }
@@ -159,13 +159,13 @@ void printLL(){
 
 struct Customers{
     char name[255];
-    Customers *next;
+    Dish *foodOrder;
 }*table[maxBuckets];
 
 Customers *createCust(char name[]){
     Customers *newCust = (Customers*)malloc(sizeof(Customers));
     strcpy(newCust->name, name);
-    newCust->next=NULL;
+    newCust->foodOrder=NULL;
     return newCust;
 }
 
@@ -201,16 +201,47 @@ void insertCust(char name[]){
 
 int searchCust(char name[]){
     int idx = djb2(name);
+    
     if(!table[idx]){
         return -1;
     }
     else {
+        for(int i=(idx+1)%maxBuckets; i!=idx; i=(i+1)%maxBuckets){
+            if(strcmp(table[i]->name, name)==0){
+                idx=i;
+                break;
+            }
+        }
         return idx;
     }
 }
 
-struct foodOrder{
+void *insertOrder(int idx, char name[], long long int prc, long long int qty){
+    Dish  *newOrder = createDish(name, prc, qty);
+    if(!table[idx]->foodOrder){
+        table[idx]->foodOrder=newOrder;
+    }
+    else{
+        Dish *curr = table[idx]->foodOrder;
+        while(curr->next){
+            curr=curr->next;
+        }
+        curr->next=newOrder;
+        newOrder->prev=curr;
+    }
+}
 
+void removeCust(int idx){
+    table[idx]->foodOrder=NULL;
+    free(table[idx]);
+}
+
+void removeOrder(int idx){
+    Dish *curr = table[idx]->foodOrder;
+    while(curr->next){
+        free(curr);
+        curr = curr->next;
+    }
 }
 
 void cls(){
@@ -388,6 +419,7 @@ void order(){
     char name[255], dish[255];
     int manyOrder, qty;
     bool cek=true;
+    int srcCustResult = 0;
     if(!head) {
         puts("The customer can't order because the menu is empty!");
         puts("Please add the dish first");
@@ -417,8 +449,8 @@ void order(){
             getchar();
             cek=false;
         }
-        int srcResult = searchCust(name);
-        if(srcResult==-1){
+        srcCustResult = searchCust(name);
+        if(srcCustResult==-1){
             printf("Customer is not present");
             getchar();
             cek=false;
@@ -455,6 +487,39 @@ void order(){
                 getchar();
             }
         }while(cek==false||qty>foundQty);
+        insertOrder(srcCustResult, dish, foundPrc*qty, qty);
+    }
+    
+    puts("Order success!");
+    printf("Press enter to continue...");
+    getchar();
+}
+
+void payment(){
+    int idx;
+    printf("Insert the customer's index: ");
+    scanf("%d", &idx);
+    if(!table[idx-1]){
+        printf("The %d customer's index is not exist!\n");
+        printf("Press enter to continue...");
+        getchar();
+    }
+    else{
+        long long int sumPrc=0;
+        int i=1;
+        printf("%s\n", table[idx-1]->name);
+        Dish *curr = table[idx-1]->foodOrder;
+        while(curr->next){
+            printf("[%d] %s x%d\n", i, curr->dish, curr->quantity);
+            sumPrc+=curr->prc;
+            curr=curr->next;
+            i++;
+        }
+        printf("Total: Rp%lld\n", sumPrc);
+        printf("Press enter to continue...");
+        removeOrder(idx-1);
+        removeCust(idx-1);
+        getchar();
     }
 }
 
@@ -470,6 +535,7 @@ void mainMenu(){
     while(true){
         cls();
         logoWarteg();
+        puts("");
         showInfo();
         puts("1. Add Dish");
         puts("2. Remove Dish");
@@ -504,6 +570,7 @@ void mainMenu(){
                 order();
                 break;
             case 7:
+            payment();
                 break;
             case 8:
                 Exit();
