@@ -206,13 +206,21 @@ int searchCust(char name[]){
         return -1;
     }
     else {
-        for(int i=(idx+1)%maxBuckets; i!=idx; i=(i+1)%maxBuckets){
-            if(strcmp(table[i]->name, name)==0){
+        if(strcmp(table[idx]->name, name)==0){
+            return idx;
+        }
+        else {
+            for(int i=(idx+1)%maxBuckets; i!=idx; i=(i+1)%maxBuckets){
+                if(strcmp(table[i]->name, name)==0){
                 idx=i;
                 break;
+                }
+                else if(i==idx-1 && strcmp(table[idx]->name,name)!=0){
+                    return -1;
+                }
             }
+            return idx;
         }
-        return idx;
     }
 }
 
@@ -425,6 +433,7 @@ void order(){
         puts("Please add the dish first");
         printf("Press enter to continue...");
         getchar();
+        return;
     }
     do{
         int trueCounter=0, falseCounter=0, len=0;
@@ -472,7 +481,7 @@ void order(){
         do{
             cek=true;
             printf("[%d] ", i);
-            scanf("%[^\n] x%d", &dish, &qty);
+            scanf("%s x%d", &dish, &qty);
             getchar();
             int srcResult = searchMenu(dish);
             if(srcResult==-2){
@@ -480,11 +489,13 @@ void order(){
                 cek=false;
                 printf("Press enter to continue...");
                 getchar();
+                puts("");
             }
             if(qty>foundQty){
                 puts("Sorry, our quantity of this food is not enough for your order");
                 printf("Press enter to continue...");
                 getchar();
+                puts("");
             }
         }while(cek==false||qty>foundQty);
         insertOrder(srcCustResult, dish, foundPrc*qty, qty);
@@ -570,7 +581,7 @@ void mainMenu(){
                 order();
                 break;
             case 7:
-            payment();
+                payment();
                 break;
             case 8:
                 Exit();
