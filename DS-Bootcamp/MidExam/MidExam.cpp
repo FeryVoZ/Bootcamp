@@ -178,11 +178,14 @@ unsigned long djb2(char name[]){
     return key%maxBuckets;
 }
 
+int custCounter=0;
+
 void linearProbing(int idx, char name[]){
     Customers *newCust = createCust(name);
     for(int i=(idx+1)%maxBuckets; i!=idx; i=(i+1)%maxBuckets){
         if(!table[i]){
             table[i]=newCust;
+            custCounter++;
             return;
         }
     }
@@ -193,6 +196,7 @@ void insertCust(char name[]){
     int idx = djb2(name);
     if(!table[idx]){
         table[idx]=newCust;
+        custCounter++;
     }
     else{
         linearProbing(idx, name);
@@ -242,12 +246,14 @@ void *insertOrder(int idx, char name[], long long int prc, long long int qty){
 void removeCust(int idx){
     table[idx]->foodOrder=NULL;
     free(table[idx]);
+    table[idx]=NULL;
 }
 
 void removeOrder(int idx){
     Dish *curr = table[idx]->foodOrder;
     while(curr->next){
         free(curr);
+        curr=NULL;
         curr = curr->next;
     }
 }
@@ -415,6 +421,11 @@ void searchCostumer(){
 void viewWarteg(){
     puts("Customer's List");
     for(int i=0; i<999; i++){
+        if(custCounter==0){
+            puts("Warteg don't have any customer!");
+            puts("Please add the customer first");
+            break;
+        }
         if(table[i]){
             printf("%d. %s\n", i+1, table[i]->name);
         }
@@ -424,13 +435,20 @@ void viewWarteg(){
 }
 
 void order(){
-    char name[255], dish[255];
+    char name[255], dish[255]="", temp[255];
     int manyOrder, qty;
     bool cek=true;
     int srcCustResult = 0;
     if(!head) {
         puts("The customer can't order because the menu is empty!");
         puts("Please add the dish first");
+        printf("Press enter to continue...");
+        getchar();
+        return;
+    }
+    else if(custCounter==0){
+        puts("Warteg don't have any customer!");
+        puts("Please add the customer first");
         printf("Press enter to continue...");
         getchar();
         return;
@@ -481,8 +499,14 @@ void order(){
         do{
             cek=true;
             printf("[%d] ", i);
-            scanf("%s x%d", &dish, &qty);
+            scanf("%[^x] x%d", &temp, &qty);
             getchar();
+            int len = strlen(temp);
+            if(temp[len-1]==' '){
+                strncpy(dish, temp, len-1);
+            }
+            // printf("%s\n", dish);
+            // getchar();
             int srcResult = searchMenu(dish);
             if(srcResult==-2){
                 puts("This menu is not exist!");
@@ -528,9 +552,9 @@ void payment(){
         }
         printf("Total: Rp%lld\n", sumPrc);
         printf("Press enter to continue...");
+        getchar();
         removeOrder(idx-1);
         removeCust(idx-1);
-        getchar();
     }
 }
 
